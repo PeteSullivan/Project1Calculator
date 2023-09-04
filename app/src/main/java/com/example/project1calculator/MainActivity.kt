@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        var displayText = ""
-        var isLastPressedSign = false
-        var lastSign = '='
+        var displayText = "0"
+        var readyToCompute = false
+        var lastSign = 'r'
         var storage = 0.0
 
 
@@ -45,67 +45,82 @@ class MainActivity : AppCompatActivity() {
 
         val display = findViewById<TextView>(R.id.display)
 
-        //button functions
-        button1.setOnClickListener {
-            if (isLastPressedSign) {
-                isLastPressedSign = false
-                displayText = ""
+
+        fun numButton(num: Int) {
+            if (displayText == "0" || lastSign == 'r') {
+                displayText = num.toString()
+                display.setText(displayText)
+                if (lastSign == 'r') lastSign = 'n'
             }
-            if (displayText.length < 8) {
-                displayText += "1"
+            else if (displayText == "") {
+                readyToCompute = true
+                displayText = num.toString()
+                display.setText(displayText)
+            }
+            else if (displayText.length < 8) {
+                displayText += num.toString()
                 display.setText(displayText)
             }
         }
+
+        fun compute() {
+            var temp = displayText.toDouble()
+
+            if (lastSign == '+') storage += temp
+            else if (lastSign == '-') storage -= temp
+            else if (lastSign == '/') storage /= temp
+            else if (lastSign == '*') storage *= temp
+
+
+            displayText = storage.toString().substring(0, minOf(storage.toString().length, 8))
+            display.setText(displayText)
+            storage = temp
+            readyToCompute = false
+        }
+
+        fun functionButton(sign: Char) {
+            if (readyToCompute) compute()
+            if (displayText != "") storage = displayText.toDouble()
+            displayText = ""
+            lastSign = sign
+        }
+
+
+        //button functions
+        button1.setOnClickListener { numButton(1) }
+        button2.setOnClickListener { numButton(2) }
+        button3.setOnClickListener { numButton(3) }
+        button4.setOnClickListener { numButton(4) }
+        button5.setOnClickListener { numButton(5) }
+        button6.setOnClickListener { numButton(6) }
+        button7.setOnClickListener { numButton(7) }
+        button8.setOnClickListener { numButton(8) }
+        button9.setOnClickListener { numButton(9) }
+        button0.setOnClickListener { numButton(0) }
+
+
+        buttonadd.setOnClickListener {functionButton('+')}
+//        buttonsubtract.setOnClickListener {functionButton('-')}
+//        buttondivide.setOnClickListener {functionButton('/')}
+//        buttonmultiply.setOnClickListener {functionButton('*')}
 
         buttonc.setOnClickListener {
-            displayText = ""
+            displayText = "0"
             display.setText(displayText)
-            lastSign = '='
-            isLastPressedSign = false
+            lastSign = 'r'
+            readyToCompute = false
         }
-        buttonadd.setOnClickListener {
-            if (isLastPressedSign && lastSign == '=') lastSign = '+'
-            else if (isLastPressedSign) {
-                var temp = displayText.toDouble()
 
-                if (lastSign == '+') storage = storage + temp
-                else if (lastSign == '-') storage = storage - temp
-                else if (lastSign == '/') storage = storage / temp
-                else if (lastSign == '*') storage = storage * temp
-
-
-                displayText = storage.toString().substring(0, minOf(storage.toString().length, 8))
-                display.setText(displayText)
-                storage = temp
-            }
-            else {
-                storage = displayText.toDouble()
-                isLastPressedSign = true
-                lastSign = '+'
-            }
-        }
         buttonrun.setOnClickListener {
-            if (!isLastPressedSign && lastSign != '=') {
-                var temp = displayText.toDouble()
-
-                if (lastSign == '+') storage = storage + temp
-                else if (lastSign == '-') storage = storage - temp
-                else if (lastSign == '/') storage = storage / temp
-                else if (lastSign == '*') storage = storage * temp
-
-
-                displayText = storage.toString().substring(0, minOf(storage.toString().length, 8))
-                display.setText(displayText)
-                storage = temp
-                isLastPressedSign = true
-
+            if (readyToCompute) {
+                compute()
+                lastSign = 'r'
             }
-
         }
-
 
 
     }
+
 
 
 }
