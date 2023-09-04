@@ -9,7 +9,15 @@ import kotlin.math.sign
 
 class MainActivity : AppCompatActivity() {
 
+        /*
+        add in rounding, apply to whenever a display number is changed (percents, sign, compute, etc.
+        do percents/sign functions
+        decimal button
+        fix display?
+        bug fix
 
+
+         */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -45,31 +53,36 @@ class MainActivity : AppCompatActivity() {
 
         val display = findViewById<TextView>(R.id.display)
 
+        fun calcRound(int: Int) {
+            //round numbers to fit in 8 characters
+        }
 
         fun numButton(num: Int) {
             if (displayText == "0" || lastSign == 'r') {
                 displayText = num.toString()
-                display.setText(displayText)
+                display.text = displayText
                 if (lastSign == 'r') lastSign = 'n'
             }
             else if (displayText == "") {
                 readyToCompute = true
                 displayText = num.toString()
-                display.setText(displayText)
+                display.text = displayText
             }
             else if (displayText.length < 8) {
                 displayText += num.toString()
-                display.setText(displayText)
+                display.text = displayText
             }
         }
 
         fun compute() {
-            var temp = displayText.toDouble()
+            val temp = displayText.toDouble()
 
-            if (lastSign == '+') storage += temp
-            else if (lastSign == '-') storage -= temp
-            else if (lastSign == '/') storage /= temp
-            else if (lastSign == '*') storage *= temp
+            when (lastSign) {
+                '+' -> storage += temp
+                '-' -> storage -= temp
+                '/' -> storage /= temp
+                '*' -> storage *= temp
+            }
 
 
             displayText = storage.toString().substring(0, minOf(storage.toString().length, 8))
@@ -100,13 +113,28 @@ class MainActivity : AppCompatActivity() {
 
 
         buttonadd.setOnClickListener {functionButton('+')}
-//        buttonsubtract.setOnClickListener {functionButton('-')}
-//        buttondivide.setOnClickListener {functionButton('/')}
-//        buttonmultiply.setOnClickListener {functionButton('*')}
+        buttonsubtract.setOnClickListener {functionButton('-')}
+        buttondivide.setOnClickListener {functionButton('/')}
+        buttonmultiply.setOnClickListener {functionButton('*')}
+
+        buttonsign.setOnClickListener {
+            if (displayText != "0" && displayText != "") {
+                if (displayText[0] == '-') displayText = displayText.substring(1,displayText.length)
+                else if (displayText.length < 8) displayText = "-$displayText"
+                display.text = displayText
+            }
+        }
+        buttonpercent.setOnClickListener {
+            if (displayText != "0" && displayText != "") {
+                displayText = (displayText.toDouble() / 100).toString()
+                displayText = displayText.substring(0, minOf(displayText.length, 8))
+                display.text = displayText
+            }
+        }
 
         buttonc.setOnClickListener {
             displayText = "0"
-            display.setText(displayText)
+            display.text = displayText
             lastSign = 'r'
             readyToCompute = false
         }
