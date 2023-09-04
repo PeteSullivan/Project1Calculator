@@ -5,29 +5,20 @@ import android.os.Bundle
 import android.os.TestLooperManager
 import android.widget.Button
 import android.widget.TextView
+import kotlin.math.roundToInt
 import kotlin.math.sign
 
 class MainActivity : AppCompatActivity() {
 
-        /*
-        add in rounding, apply to whenever a display number is changed (percents, sign, compute, etc.
-        do percents/sign functions
-        decimal button
-        fix display?
-        bug fix
-
-
-         */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
-        var displayText = "0"
-        var readyToCompute = false
-        var lastSign = 'r'
-        var storage = 0.0
+        var displayText = "" //text displayed
+        var lastSign = 'r' //stores the last operation clicked
+        var storage = 0.0 //stores first number for calculations
 
 
         // get reference to buttons
@@ -50,31 +41,21 @@ class MainActivity : AppCompatActivity() {
         val buttonpercent = findViewById<Button>(R.id.buttonpercent)
         val buttonrun = findViewById<Button>(R.id.buttonrun)
         val buttonsign = findViewById<Button>(R.id.buttonsign)
-
         val display = findViewById<TextView>(R.id.display)
 
-        fun calcRound(int: Int) {
-            //round numbers to fit in 8 characters
-        }
-
         fun numButton(num: Int) {
-            if (displayText == "0" || lastSign == 'r') {
+            //general function for digit buttons
+            if (displayText == "" || displayText == "0") {
                 displayText = num.toString()
                 display.text = displayText
-                if (lastSign == 'r') lastSign = 'n'
-            }
-            else if (displayText == "") {
-                readyToCompute = true
-                displayText = num.toString()
-                display.text = displayText
-            }
-            else if (displayText.length < 8) {
+            } else if (displayText.length < 8) {
                 displayText += num.toString()
                 display.text = displayText
             }
         }
 
         fun compute() {
+            //general function for running operations
             val temp = displayText.toDouble()
 
             when (lastSign) {
@@ -84,22 +65,20 @@ class MainActivity : AppCompatActivity() {
                 '*' -> storage *= temp
             }
 
-
             displayText = storage.toString().substring(0, minOf(storage.toString().length, 8))
             display.setText(displayText)
             storage = temp
-            readyToCompute = false
         }
 
         fun functionButton(sign: Char) {
-            if (readyToCompute) compute()
-            if (displayText != "") storage = displayText.toDouble()
+            //base funtion for +,-,/,* buttons
+            if (lastSign != 'r' && displayText != "") compute()
+            if (displayText != "")  storage = displayText.toDouble()
             displayText = ""
             lastSign = sign
         }
 
-
-        //button functions
+        //add button functions
         button1.setOnClickListener { numButton(1) }
         button2.setOnClickListener { numButton(2) }
         button3.setOnClickListener { numButton(3) }
@@ -111,13 +90,14 @@ class MainActivity : AppCompatActivity() {
         button9.setOnClickListener { numButton(9) }
         button0.setOnClickListener { numButton(0) }
 
-
         buttonadd.setOnClickListener {functionButton('+')}
         buttonsubtract.setOnClickListener {functionButton('-')}
         buttondivide.setOnClickListener {functionButton('/')}
         buttonmultiply.setOnClickListener {functionButton('*')}
+        buttonrun.setOnClickListener {functionButton('r') }
 
         buttonsign.setOnClickListener {
+            //changes sign when applicable
             if (displayText != "0" && displayText != "") {
                 if (displayText[0] == '-') displayText = displayText.substring(1,displayText.length)
                 else if (displayText.length < 8) displayText = "-$displayText"
@@ -125,30 +105,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
         buttonpercent.setOnClickListener {
+            //divides by 100 when applicable
             if (displayText != "0" && displayText != "") {
                 displayText = (displayText.toDouble() / 100).toString()
                 displayText = displayText.substring(0, minOf(displayText.length, 8))
                 display.text = displayText
             }
         }
-
+       buttondecimal.setOnClickListener {
+           //adds decimal when applicable
+           if (displayText != "" && !displayText.contains('.') && displayText.length < 8) {
+               displayText += "."
+               display.text = displayText
+           } else if (displayText == "") {
+               displayText = "0."
+               display.text = displayText
+           }
+       }
         buttonc.setOnClickListener {
-            displayText = "0"
-            display.text = displayText
+            //resets everything
+            displayText = ""
+            display.text = "0"
+            storage = 0.0
             lastSign = 'r'
-            readyToCompute = false
         }
-
-        buttonrun.setOnClickListener {
-            if (readyToCompute) {
-                compute()
-                lastSign = 'r'
-            }
-        }
-
 
     }
-
-
 
 }
