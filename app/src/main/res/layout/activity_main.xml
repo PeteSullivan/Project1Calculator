@@ -13,7 +13,7 @@
         android:paddingTop="4dp"
         android:textSize="80sp"
         android:textStyle="bold"
-        android:text="5318008"
+        android:text="0"
         />
 
     <LinearLayout
