@@ -9,7 +9,8 @@ import kotlin.math.roundToInt
 import kotlin.math.sign
 
 class MainActivity : AppCompatActivity() {
-
+        //add OoO PEMDAS
+        //add rounding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun functionButton(sign: Char) {
-            //base funtion for +,-,/,* buttons
+            //base function for +,-,/,* buttons
             if (lastSign != 'r' && displayText != "") compute()
             if (displayText != "")  storage = displayText.toDouble()
             displayText = ""
