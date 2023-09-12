@@ -116,8 +116,7 @@ class MainActivity : AppCompatActivity() {
                 display.text = display.text.substring(0, minOf(display.text.length, 8))
             }
             else if (displayText != "0" && displayText != "") {
-                if (displayText[0] == '-') displayText =
-                    displayText.substring(1, displayText.length)
+                if (displayText[0] == '-') displayText = displayText.substring(1, displayText.length)
                 else if (displayText.length < 8) displayText = "-$displayText"
                 display.text = displayText
             }
@@ -144,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                 storage = kotlin.math.sin(storage)
                 display.text = storage.toString()
                 display.text = display.text.substring(0, minOf(display.text.length, 8))
+
             }
             else if (displayText != "") {
                 displayText = (kotlin.math.sin(displayText.toDouble())).toString()
@@ -173,6 +173,7 @@ class MainActivity : AppCompatActivity() {
                 storage = kotlin.math.tan(storage)
                 display.text = storage.toString()
                 display.text = display.text.substring(0, minOf(display.text.length, 8))
+
             }
             else if (displayText != "") {
                 displayText = (kotlin.math.tan(displayText.toDouble())).toString()
@@ -188,6 +189,9 @@ class MainActivity : AppCompatActivity() {
                 storage = kotlin.math.log10(storage)
                 display.text = storage.toString()
                 display.text = display.text.substring(0, minOf(display.text.length, 8))
+                displayText = display.text.toString()
+
+
             }
             else if (displayText != "") {
                 displayText = (kotlin.math.log10(displayText.toDouble())).toString()
@@ -203,6 +207,8 @@ class MainActivity : AppCompatActivity() {
                 storage = kotlin.math.ln(storage)
                 display.text = storage.toString()
                 display.text = display.text.substring(0, minOf(display.text.length, 8))
+                displayText = display.text.toString()
+
             }
             else if (displayText != "") {
                 displayText = (kotlin.math.ln(displayText.toDouble())).toString()
